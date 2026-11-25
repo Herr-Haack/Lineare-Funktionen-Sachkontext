@@ -1,0 +1,757 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lineare Funktionen im Alltag</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap">
+<style>
+/* Layout: Arbeitsblatt-Karte auf Karopapier – links Aufgabe, rechts Koordinatensystem; schmal einspaltig */
+:root{
+  --bg:#eef3f6; --paper:#ffffff; --ink:#15222e; --muted:#5a6b78; --line:#d5e0e7;
+  --grid:#dbe7ee; --grid-major:#a9c2d1; --axis:#29404f;
+  --accent:#1d5fd1; --accent-ink:#ffffff; --accent-soft:#e3ecfb;
+  --graph:#1d5fd1; --guide:#e0670f; --guide-soft:#fdeedf;
+  --ok:#17803d; --ok-soft:#e1f4e7; --bad:#c22f2f; --bad-soft:#fbe6e6; --hint:#8a5a00; --hint-soft:#fff3d6;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Lexend", "Segoe UI", system-ui, sans-serif;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f161c; --paper:#17212a; --ink:#e6eef4; --muted:#93a5b3; --line:#2a3946;
+  --grid:#1f2c37; --grid-major:#36505f; --axis:#b9cbd7;
+  --accent:#6ea0ff; --accent-ink:#0b1420; --accent-soft:#1c2c47;
+  --graph:#7fb0ff; --guide:#ff9a4d; --guide-soft:#3a2614;
+  --ok:#5fd38a; --ok-soft:#14301f; --bad:#ff7b7b; --bad-soft:#3a1a1a; --hint:#f2c76b; --hint-soft:#33290f;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f161c; --paper:#17212a; --ink:#e6eef4; --muted:#93a5b3; --line:#2a3946;
+  --grid:#1f2c37; --grid-major:#36505f; --axis:#b9cbd7;
+  --accent:#6ea0ff; --accent-ink:#0b1420; --accent-soft:#1c2c47;
+  --graph:#7fb0ff; --guide:#ff9a4d; --guide-soft:#3a2614;
+  --ok:#5fd38a; --ok-soft:#14301f; --bad:#ff7b7b; --bad-soft:#3a1a1a; --hint:#f2c76b; --hint-soft:#33290f;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1 .fx{color:var(--accent)}
+.sub{color:var(--muted);margin:4px 0 0;font-size:.95rem}
+.stats{display:flex;gap:8px;flex-wrap:wrap}
+.stat{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:.9rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat b{font-weight:700}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.seg{display:flex;flex-wrap:wrap;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:4px}
+.seg button{font:inherit;font-size:.95rem;border:0;background:transparent;color:var(--ink);padding:7px 12px;border-radius:8px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:700}
+.seg button:hover:not([aria-pressed="true"]){background:var(--accent-soft)}
+.seglabel{font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-right:6px}
+.ctl{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start}
+@media (max-width:880px){main{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:20px;min-width:0}
+.tag{display:inline-block;font-size:.75rem;letter-spacing:.07em;text-transform:uppercase;font-weight:700;color:var(--accent);margin-bottom:4px}
+h2{font-family:var(--f-display);font-weight:600;font-size:1.35rem;margin:0 0 10px;text-wrap:balance}
+.situation{margin:0 0 12px;max-width:62ch}
+.vars{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.92rem;color:var(--muted);margin:0 0 14px;padding:8px 12px;border-radius:8px;background:var(--bg)}
+.vars b{color:var(--ink)}
+.task{font-weight:700;margin:0 0 14px}
+.eq{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:1.3rem;margin-bottom:14px}
+.eq .lbl{font-style:italic}
+input[type=text]{font:inherit;font-size:1.15rem;width:6.2em;padding:7px 10px;border:2px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);text-align:center;font-variant-numeric:tabular-nums}
+input[type=text]:focus{outline:none;border-color:var(--accent)}
+input.ok{border-color:var(--ok);background:var(--ok-soft)}
+input.bad{border-color:var(--bad);background:var(--bad-soft)}
+.pm{font:inherit;font-size:1rem;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;width:2.2em;height:2.2em;cursor:pointer}
+.answer{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;font-size:1.1rem}
+.unit{color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:inherit;font-size:.98rem;border-radius:8px;padding:9px 16px;cursor:pointer;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.btn:hover{filter:brightness(.97)}
+.btn:focus-visible,.seg button:focus-visible,.pm:focus-visible,input:focus-visible{outline:3px solid var(--guide);outline-offset:2px}
+.fb{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.msg{border-radius:8px;padding:10px 14px;border-left:4px solid}
+.msg.ok{background:var(--ok-soft);border-color:var(--ok)}
+.msg.bad{background:var(--bad-soft);border-color:var(--bad)}
+.msg.hint{background:var(--hint-soft);border-color:var(--hint)}
+.msg.sol{background:var(--accent-soft);border-color:var(--accent)}
+.msg p{margin:4px 0}
+.msg strong{display:block;margin-bottom:2px}
+.steps{margin:6px 0 0;padding-left:1.2em}
+.steps li{margin:3px 0}
+.m{font-variant-numeric:tabular-nums}
+.graphcard h3{font-family:var(--f-display);font-weight:600;font-size:1.05rem;margin:0 0 8px}
+.graphbox{overflow-x:auto}
+svg.graph{width:100%;height:auto;display:block;min-width:300px;user-select:none}
+.graph .gminor{stroke:var(--grid);stroke-width:1}
+.graph .gmajor{stroke:var(--grid-major);stroke-width:1}
+.graph .axis{stroke:var(--axis);stroke-width:1.6;fill:none}
+.graph .arrow{fill:var(--axis)}
+.graph text{fill:var(--ink);font-family:var(--f-body);font-size:15px}
+.graph .tick{fill:var(--muted);font-variant-numeric:tabular-nums}
+.graph .axlbl{font-weight:700;font-size:15px}
+.graph .fline{stroke:var(--graph);stroke-width:3;fill:none;stroke-linecap:round}
+.graph .guide{stroke:var(--guide);stroke-width:2.2;stroke-dasharray:7 5;fill:none}
+.graph .guidept{fill:var(--guide);stroke:var(--paper);stroke-width:2}
+.graph .gp{fill:var(--graph);stroke:var(--paper);stroke-width:2}
+.graph .glbl{fill:var(--guide);font-weight:700}
+.graph .glblbg{fill:var(--paper);opacity:.9}
+.graph .ruler{stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;pointer-events:none}
+.graph .hit{fill:transparent}
+.graph.ruling{touch-action:none;cursor:crosshair}
+.gfoot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center;margin-top:8px;font-size:.9rem;color:var(--muted)}
+.gfoot label{display:flex;gap:6px;align-items:center;cursor:pointer}
+.placeholder{display:flex;align-items:center;justify-content:center;text-align:center;min-height:240px;color:var(--muted);border:2px dashed var(--line);border-radius:8px;padding:20px}
+.howto{font-size:.92rem;color:var(--muted);max-width:none}
+.howto summary{cursor:pointer;color:var(--ink);font-weight:700}
+.howto ul{margin:8px 0 0;padding-left:1.2em}
+@media (prefers-reduced-motion:no-preference){.msg{animation:pop .25s ease-out}@keyframes pop{from{transform:translateY(4px);opacity:.4}to{transform:none;opacity:1}}
+  .graph .guide.anim{stroke-dashoffset:0;animation:draw .7s ease-out}@keyframes draw{from{opacity:0}to{opacity:1}}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Lineare Funktionen <span class="fx">im Alltag</span></h1>
+      <p class="sub">Klasse 8 · Sachsituationen modellieren, Funktionsgleichungen aufstellen, Graphen ablesen</p>
+    </div>
+    <div class="stats" aria-live="polite">
+      <span class="stat">Richtig: <b id="stCorrect">0</b> / <b id="stDone">0</b></span>
+      <span class="stat">Serie: <b id="stStreak">0</b></span>
+      <span class="stat">Beste Serie: <b id="stBest">0</b></span>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="ctl">
+      <span class="seglabel">Übung</span>
+      <div class="seg" id="modeSeg" role="group" aria-label="Übungsart">
+        <button type="button" data-mode="wert" aria-pressed="true">Funktionswert ablesen</button>
+        <button type="button" data-mode="stelle" aria-pressed="false">Stelle ablesen</button>
+        <button type="button" data-mode="gleichung" aria-pressed="false">Gleichung aufstellen</button>
+        <button type="button" data-mode="mix" aria-pressed="false">Gemischt</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="seglabel">Stufe</span>
+      <div class="seg" id="levelSeg" role="group" aria-label="Schwierigkeitsstufe">
+        <button type="button" data-level="1" aria-pressed="true">1</button>
+        <button type="button" data-level="2" aria-pressed="false">2</button>
+        <button type="button" data-level="3" aria-pressed="false">3</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section class="card" id="taskCard" aria-live="polite"></section>
+    <section class="card graphcard">
+      <h3 id="graphTitle">Graph</h3>
+      <div class="graphbox" id="graphBox"></div>
+      <div class="gfoot">
+        <label for="rulerToggle"><input type="checkbox" id="rulerToggle"> Ablesehilfe (Linien folgen dem Finger / der Maus)</label>
+        <span id="graphNote"></span>
+      </div>
+    </section>
+  </main>
+
+  <details class="card howto">
+    <summary>So funktioniert die Übung</summary>
+    <ul>
+      <li><b>Funktionswert ablesen:</b> Eine Stelle x ist gegeben. Gehe auf der x-Achse zu dieser Stelle, senkrecht zum Graphen und dann waagerecht zur y-Achse.</li>
+      <li><b>Stelle ablesen:</b> Ein Funktionswert y ist gegeben. Gehe auf der y-Achse zu diesem Wert, waagerecht zum Graphen und dann senkrecht zur x-Achse.</li>
+      <li><b>Gleichung aufstellen:</b> Lies aus dem Text den Startwert <i>n</i> (Wert bei x = 0) und die Änderung pro Einheit <i>m</i> heraus und gib <span class="m">f(x) = m·x + n</span> ein. Nimmt eine Größe ab, ist <i>m</i> negativ.</li>
+      <li><b>Stufe 1:</b> Startwert und Änderung pro Einheit stehen direkt im Text, Ablesewerte liegen auf beschrifteten Linien. <b>Stufe 2:</b> Die Änderung ist für mehrere Einheiten oder über einen Messwert angegeben. <b>Stufe 3:</b> Startwert oder beide Werte müssen aus Wertepaaren berechnet werden, Ablesewerte liegen auch zwischen den Beschriftungen.</li>
+      <li>Dezimalzahlen kannst du mit Komma oder Punkt eingeben, Brüche als 5/2. Mit <kbd>Enter</kbd> prüfst du deine Antwort.</li>
+    </ul>
+  </details>
+</div>
+
+<script>
+"use strict";
+/* ---------- Zahlformat ---------- */
+const MINUS = "−";
+function round(v, d = 6) { const f = Math.pow(10, d); return Math.round(v * f) / f; }
+function N(v, dec) {
+  v = round(v);
+  let s = dec != null ? v.toFixed(dec) : String(v);
+  s = s.replace(".", ",").replace("-", MINUS);
+  return s;
+}
+function E(v) { v = round(v, 4); return (Number.isInteger(v) ? N(v) : N(v, 2)) + " €"; }
+function CT(v) { return N(round(v * 100, 4)) + " Cent"; }
+function parseNum(str) {
+  if (str == null) return NaN;
+  let s = String(str).trim().replace(/\s+/g, "").replace(/[−–]/g, "-").replace(/€|%|°C|cm|km|m³|min|h/gi, "");
+  if (!s) return NaN;
+  if (s.includes("/")) {
+    const [a, b] = s.split("/"); const x = parseNum(a), y = parseNum(b);
+    return y ? x / y : NaN;
+  }
+  s = s.replace(",", ".");
+  if (!/^[-+]?(\d+\.?\d*|\.\d+)$/.test(s)) return NaN;
+  return parseFloat(s);
+}
+const eq = (a, b, eps = 1e-6) => Math.abs(a - b) < eps;
+const isMult = (v, step) => Math.abs(v / step - Math.round(v / step)) < 1e-6;
+const pick = a => a[Math.floor(Math.random() * a.length)];
+function eqStr(m, n) {
+  let ms = eq(m, 1) ? "" : eq(m, -1) ? MINUS : N(m);
+  let s = "f(x) = " + ms + "x";
+  if (!eq(n, 0)) s += (n > 0 ? " + " : " " + MINUS + " ") + N(Math.abs(n));
+  return s;
+}
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+/* ---------- Sachsituationen ---------- */
+const A = Math.abs;
+const SCEN = [
+  { id: "taxi", title: "Taxifahrt", xName: "Strecke", xUnit: "km", yName: "Fahrpreis", yUnit: "€", money: true,
+    n: [3, 3.5, 4, 4.5, 5], m: [1.5, 2, 2.5], xMax: 20, k: [5, 10], px: [6, 8, 10, 12, 15],
+    intro: "Ein Taxiunternehmen berechnet den Fahrpreis aus einer Grundgebühr und einem festen Preis pro gefahrenem Kilometer.",
+    start: n => `Die Grundgebühr beträgt ${E(n)}.`,
+    rate: m => `Für jeden gefahrenen Kilometer kommen ${E(m)} hinzu.`,
+    rateK: (m, k) => `Für je ${k} gefahrene Kilometer kommen ${E(m * k)} hinzu.`,
+    point: (x, y) => `Eine Fahrt über ${N(x)} km kostet ${E(y)}.`,
+    askY: x => `Wie viel kostet eine Fahrt über ${N(x)} km?`, ansY: (x, y) => `Eine Fahrt über ${N(x)} km kostet ${E(y)}.`,
+    askX: y => `Wie weit kann man für ${E(y)} fahren?`, ansX: (x, y) => `Für ${E(y)} kann man ${N(x)} km weit fahren.`,
+    caption: "Fahrpreis in Abhängigkeit von der gefahrenen Strecke" },
+  { id: "handy", title: "Handytarif", xName: "Gesprächszeit", xUnit: "min", yName: "Rechnungsbetrag", yUnit: "€", money: true, cents: true,
+    n: [5, 8, 10, 12], m: [0.05, 0.1, 0.15, 0.2], xMax: 120, k: [10, 60], px: [30, 40, 50, 60, 80, 100],
+    intro: "Ein Handytarif hat eine monatliche Grundgebühr. Zusätzlich wird jede telefonierte Minute abgerechnet.",
+    start: n => `Die Grundgebühr beträgt ${E(n)} im Monat.`,
+    rate: m => `Jede Gesprächsminute kostet ${CT(m)}.`,
+    rateK: (m, k) => `Für je ${k} Minuten Telefonieren kommen ${E(m * k)} hinzu.`,
+    point: (x, y) => `Wer in einem Monat ${N(x)} Minuten telefoniert, zahlt insgesamt ${E(y)}.`,
+    askY: x => `Wie hoch ist die Monatsrechnung bei ${N(x)} Minuten Gesprächszeit?`, ansY: (x, y) => `Bei ${N(x)} Minuten Gesprächszeit beträgt die Rechnung ${E(y)}.`,
+    askX: y => `Wie viele Minuten wurde telefoniert, wenn die Rechnung ${E(y)} beträgt?`, ansX: (x, y) => `Bei einer Rechnung von ${E(y)} wurde ${N(x)} Minuten telefoniert.`,
+    caption: "Monatsrechnung in Abhängigkeit von der Gesprächszeit" },
+  { id: "tank", title: "Regenwassertank", xName: "Zeit", xUnit: "min", yName: "Wassermenge", yUnit: "l",
+    n: [20, 30, 40, 50], m: [5, 8, 10, 15], xMax: 20, k: [3, 4, 5], px: [4, 5, 6, 8, 10],
+    intro: "Ein Regenwassertank im Garten wird mit einem Schlauch gleichmäßig befüllt.",
+    start: n => `Zu Beginn befinden sich bereits ${N(n)} Liter Wasser im Tank.`,
+    rate: m => `Pro Minute fließen ${N(m)} Liter hinzu.`,
+    rateK: (m, k) => `In ${k} Minuten fließen ${N(m * k)} Liter hinzu.`,
+    point: (x, y) => `Nach ${N(x)} Minuten sind ${N(y)} Liter im Tank.`,
+    askY: x => `Wie viel Wasser ist nach ${N(x)} Minuten im Tank?`, ansY: (x, y) => `Nach ${N(x)} Minuten sind ${N(y)} Liter Wasser im Tank.`,
+    askX: y => `Nach wie vielen Minuten sind ${N(y)} Liter im Tank?`, ansX: (x, y) => `Nach ${N(x)} Minuten sind ${N(y)} Liter im Tank.`,
+    caption: "Wassermenge im Tank in Abhängigkeit von der Zeit" },
+  { id: "pool", title: "Schwimmbecken leeren", xName: "Zeit", xUnit: "h", yName: "Wassermenge", yUnit: "m³",
+    n: [40, 48, 60], m: [-4, -5, -6], xMax: 15, k: [2, 3], px: [2, 3, 4, 5],
+    intro: "Ein Schwimmbecken wird zum Ende der Badesaison gleichmäßig leer gepumpt.",
+    start: n => `Zu Beginn sind ${N(n)} m³ Wasser im Becken.`,
+    rate: m => `Die Pumpe pumpt pro Stunde ${N(A(m))} m³ Wasser ab.`,
+    rateK: (m, k) => `In ${k} Stunden pumpt sie ${N(A(m) * k)} m³ Wasser ab.`,
+    point: (x, y) => `Nach ${N(x)} Stunden sind noch ${N(y)} m³ Wasser im Becken.`,
+    askY: x => `Wie viel Wasser ist nach ${N(x)} Stunden noch im Becken?`, ansY: (x, y) => `Nach ${N(x)} Stunden sind noch ${N(y)} m³ Wasser im Becken.`,
+    askX: y => `Nach wie vielen Stunden sind nur noch ${N(y)} m³ Wasser im Becken?`, ansX: (x, y) => `Nach ${N(x)} Stunden sind nur noch ${N(y)} m³ Wasser im Becken.`,
+    caption: "Wassermenge im Becken in Abhängigkeit von der Zeit" },
+  { id: "kerze", title: "Kerze", xName: "Brenndauer", xUnit: "h", yName: "Höhe", yUnit: "cm",
+    n: [18, 20, 24, 30], m: [-1.5, -2, -2.5, -3], xMax: 16, k: [2, 4], px: [2, 3, 4, 6],
+    intro: "Eine Kerze wird angezündet und brennt gleichmäßig ab.",
+    start: n => `Die neue Kerze ist ${N(n)} cm hoch.`,
+    rate: m => `Pro Stunde wird sie um ${N(A(m))} cm kürzer.`,
+    rateK: (m, k) => `In ${k} Stunden brennt sie um ${N(A(m) * k)} cm herunter.`,
+    point: (x, y) => `Nach ${N(x)} Stunden ist sie noch ${N(y)} cm hoch.`,
+    askY: x => `Wie hoch ist die Kerze nach ${N(x)} Stunden?`, ansY: (x, y) => `Nach ${N(x)} Stunden ist die Kerze noch ${N(y)} cm hoch.`,
+    askX: y => `Nach wie vielen Stunden ist die Kerze nur noch ${N(y)} cm hoch?`, ansX: (x, y) => `Nach ${N(x)} Stunden ist die Kerze nur noch ${N(y)} cm hoch.`,
+    caption: "Höhe der Kerze in Abhängigkeit von der Brenndauer" },
+  { id: "blume", title: "Sonnenblume", xName: "Zeit", xUnit: "Wochen", yName: "Höhe", yUnit: "cm",
+    n: [5, 8, 10, 12], m: [3, 4, 5, 6], xMax: 12, k: [2, 3], px: [3, 4, 5, 6],
+    intro: "Eine junge Sonnenblume wird ins Beet gepflanzt und wächst danach gleichmäßig.",
+    start: n => `Beim Einpflanzen ist sie ${N(n)} cm groß.`,
+    rate: m => `Pro Woche wächst sie um ${N(m)} cm.`,
+    rateK: (m, k) => `In ${k} Wochen wächst sie um ${N(m * k)} cm.`,
+    point: (x, y) => `Nach ${N(x)} Wochen ist sie ${N(y)} cm groß.`,
+    askY: x => `Wie groß ist die Sonnenblume nach ${N(x)} Wochen?`, ansY: (x, y) => `Nach ${N(x)} Wochen ist die Sonnenblume ${N(y)} cm groß.`,
+    askX: y => `Nach wie vielen Wochen ist die Sonnenblume ${N(y)} cm groß?`, ansX: (x, y) => `Nach ${N(x)} Wochen ist die Sonnenblume ${N(y)} cm groß.`,
+    caption: "Höhe der Sonnenblume in Abhängigkeit von der Zeit" },
+  { id: "sparen", title: "Sparen", xName: "Zeit", xUnit: "Wochen", yName: "Erspartes", yUnit: "€", money: true,
+    n: [40, 50, 80, 100, 120], m: [5, 10, 15, 20], xMax: 20, k: [3, 4], px: [4, 5, 6, 8, 10],
+    intro: "Lena spart für ein neues Fahrrad.",
+    start: n => `Sie hat bereits ${E(n)} in ihrer Spardose.`,
+    rate: m => `Jede Woche legt sie ${E(m)} dazu.`,
+    rateK: (m, k) => `In ${k} Wochen legt sie insgesamt ${E(m * k)} dazu.`,
+    point: (x, y) => `Nach ${N(x)} Wochen sind ${E(y)} in der Spardose.`,
+    askY: x => `Wie viel Geld hat Lena nach ${N(x)} Wochen?`, ansY: (x, y) => `Nach ${N(x)} Wochen hat Lena ${E(y)}.`,
+    askX: y => `Nach wie vielen Wochen hat Lena ${E(y)} gespart?`, ansX: (x, y) => `Nach ${N(x)} Wochen hat Lena ${E(y)}.`,
+    caption: "Geld in der Spardose in Abhängigkeit von der Zeit" },
+  { id: "akku", title: "Handyakku", xName: "Zeit", xUnit: "h", yName: "Ladestand", yUnit: "%",
+    n: [100, 90, 80], m: [-5, -8, -10], xMax: 20, k: [2, 3], px: [2, 3, 4, 5],
+    intro: "Beim Videostreamen verliert Toms Handy gleichmäßig Akkuladung.",
+    start: n => `Zu Beginn ist der Akku zu ${N(n)} % geladen.`,
+    rate: m => `Pro Stunde sinkt der Ladestand um ${N(A(m))} Prozentpunkte.`,
+    rateK: (m, k) => `In ${k} Stunden sinkt der Ladestand um ${N(A(m) * k)} Prozentpunkte.`,
+    point: (x, y) => `Nach ${N(x)} Stunden zeigt das Handy noch ${N(y)} % an.`,
+    askY: x => `Welchen Ladestand hat der Akku nach ${N(x)} Stunden?`, ansY: (x, y) => `Nach ${N(x)} Stunden hat der Akku noch ${N(y)} %.`,
+    askX: y => `Nach wie vielen Stunden zeigt das Handy nur noch ${N(y)} % an?`, ansX: (x, y) => `Nach ${N(x)} Stunden zeigt das Handy nur noch ${N(y)} % an.`,
+    caption: "Ladestand des Akkus in Abhängigkeit von der Zeit" },
+  { id: "rad", title: "Fahrradverleih", xName: "Leihdauer", xUnit: "h", yName: "Preis", yUnit: "€", money: true,
+    n: [4, 5, 6, 8], m: [2, 2.5, 3, 4], xMax: 10, k: [2, 3], px: [2, 3, 4, 5],
+    intro: "Ein Fahrradverleih berechnet eine feste Leihgebühr und zusätzlich einen Betrag pro Stunde.",
+    start: n => `Die feste Leihgebühr beträgt ${E(n)}.`,
+    rate: m => `Pro Stunde kostet das Fahrrad ${E(m)}.`,
+    rateK: (m, k) => `Für je ${k} Stunden kommen ${E(m * k)} hinzu.`,
+    point: (x, y) => `Wer das Rad ${N(x)} Stunden leiht, zahlt insgesamt ${E(y)}.`,
+    askY: x => `Wie viel kostet es, das Fahrrad ${N(x)} Stunden zu leihen?`, ansY: (x, y) => `${N(x)} Stunden Leihdauer kosten ${E(y)}.`,
+    askX: y => `Wie lange kann man das Fahrrad für ${E(y)} leihen?`, ansX: (x, y) => `Für ${E(y)} kann man das Fahrrad ${N(x)} Stunden leihen.`,
+    caption: "Leihpreis in Abhängigkeit von der Leihdauer" },
+  { id: "berg", title: "Bergwanderung", xName: "Zeit", xUnit: "h", yName: "Höhe", yUnit: "m",
+    n: [400, 600, 800, 1000], m: [200, 250, 300, 400], xMax: 6, k: [2, 3], px: [1, 2, 3, 4],
+    intro: "Eine Wandergruppe startet an einer Hütte und steigt gleichmäßig bergauf.",
+    start: n => `Die Hütte liegt auf ${N(n)} m über dem Meeresspiegel.`,
+    rate: m => `Pro Stunde schafft die Gruppe ${N(m)} Höhenmeter.`,
+    rateK: (m, k) => `In ${k} Stunden schafft sie ${N(m * k)} Höhenmeter.`,
+    point: (x, y) => `Nach ${N(x)} Stunden ist sie auf ${N(y)} m Höhe.`,
+    askY: x => `Auf welcher Höhe ist die Gruppe nach ${N(x)} Stunden?`, ansY: (x, y) => `Nach ${N(x)} Stunden ist die Gruppe auf ${N(y)} m Höhe.`,
+    askX: y => `Nach wie vielen Stunden erreicht die Gruppe ${N(y)} m Höhe?`, ansX: (x, y) => `Nach ${N(x)} Stunden erreicht die Gruppe ${N(y)} m Höhe.`,
+    caption: "Höhe der Wandergruppe in Abhängigkeit von der Zeit" },
+  { id: "wasser", title: "Wasser erhitzen", xName: "Zeit", xUnit: "min", yName: "Temperatur", yUnit: "°C",
+    n: [10, 15, 20], m: [5, 6, 8], xMax: 10, k: [2, 3], px: [2, 3, 4, 5],
+    intro: "In einem Topf wird Wasser auf dem Herd erhitzt. Die Temperatur steigt dabei gleichmäßig.",
+    start: n => `Zu Beginn hat das Wasser eine Temperatur von ${N(n)} °C.`,
+    rate: m => `Pro Minute steigt die Temperatur um ${N(m)} °C.`,
+    rateK: (m, k) => `In ${k} Minuten steigt die Temperatur um ${N(m * k)} °C.`,
+    point: (x, y) => `Nach ${N(x)} Minuten ist das Wasser ${N(y)} °C warm.`,
+    askY: x => `Wie warm ist das Wasser nach ${N(x)} Minuten?`, ansY: (x, y) => `Nach ${N(x)} Minuten ist das Wasser ${N(y)} °C warm.`,
+    askX: y => `Nach wie vielen Minuten ist das Wasser ${N(y)} °C warm?`, ansX: (x, y) => `Nach ${N(x)} Minuten ist das Wasser ${N(y)} °C warm.`,
+    caption: "Wassertemperatur in Abhängigkeit von der Zeit" },
+  { id: "bus", title: "Busreise", xName: "Fahrzeit", xUnit: "h", yName: "Entfernung von Berlin", yUnit: "km",
+    n: [20, 30, 40, 50], m: [60, 70, 80, 90], xMax: 5, k: [2, 3], px: [1, 2, 3],
+    intro: "Ein Reisebus fährt auf der Autobahn mit gleichbleibender Geschwindigkeit von Berlin weg.",
+    start: n => `Zu Beginn der Beobachtung ist der Bus bereits ${N(n)} km von Berlin entfernt.`,
+    rate: m => `Er legt pro Stunde ${N(m)} km zurück.`,
+    rateK: (m, k) => `In ${k} Stunden legt er ${N(m * k)} km zurück.`,
+    point: (x, y) => `Nach ${N(x)} Stunden ist er ${N(y)} km von Berlin entfernt.`,
+    askY: x => `Wie weit ist der Bus nach ${N(x)} Stunden von Berlin entfernt?`, ansY: (x, y) => `Nach ${N(x)} Stunden ist der Bus ${N(y)} km von Berlin entfernt.`,
+    askX: y => `Nach wie vielen Stunden ist der Bus ${N(y)} km von Berlin entfernt?`, ansX: (x, y) => `Nach ${N(x)} Stunden ist der Bus ${N(y)} km von Berlin entfernt.`,
+    caption: "Entfernung von Berlin in Abhängigkeit von der Fahrzeit" }
+];
+
+/* ---------- Achsen und Raster ---------- */
+function niceStep(raw) {
+  const e = Math.pow(10, Math.floor(Math.log10(raw)));
+  for (const c of [1, 2, 5, 10]) if (c * e >= raw - 1e-9) return round(c * e);
+  return 10 * e;
+}
+function minorOf(major) {
+  const mant = round(major / Math.pow(10, Math.floor(Math.log10(major) + 1e-9)), 4);
+  return round(major / (mant === 2 ? 4 : mant === 5 ? 5 : 2));
+}
+function makeGrid(sc, n, m) {
+  const xZero = m < 0 ? -n / m : Infinity;
+  const xEnd = Math.min(sc.xMax, xZero);
+  const xMajor = niceStep(xEnd / 10);
+  const xAxis = round(Math.ceil(xEnd / xMajor - 1e-9) * xMajor);
+  const yTop = m > 0 ? n + m * xAxis : n;
+  const yMajor = niceStep(yTop / 10);
+  const yAxis = round(Math.ceil(yTop / yMajor - 1e-9) * yMajor);
+  return { xMajor, xMinor: minorOf(xMajor), xAxis, xLineEnd: Math.min(xAxis, xZero),
+           yMajor, yMinor: minorOf(yMajor), yAxis };
+}
+
+/* ---------- Aufgaben erzeugen ---------- */
+let lastScen = null;
+function chooseScen() {
+  let sc; do { sc = pick(SCEN); } while (SCEN.length > 1 && sc.id === lastScen);
+  lastScen = sc.id; return sc;
+}
+function genTask(mode, level) {
+  const type = mode === "mix" ? pick(["gleichung", "wert", "stelle"]) : mode;
+  for (let tries = 0; tries < 200; tries++) {
+    const sc = chooseScen();
+    const n = pick(sc.n), m = pick(sc.m);
+    const g = makeGrid(sc, n, m);
+    const f = x => round(n + m * x);
+    if (type === "gleichung") {
+      const xs = sc.px.filter(x => f(x) > 0);
+      if (xs.length < 2) continue;
+      let variant = level === 1 ? "direct" : level === 2 ? pick(["startRateK", "startPoint"]) : pick(["pointRate", "twoPoints"]);
+      const t = { type, sc, n, m, g, variant, f };
+      if (variant === "direct") t.text = [sc.start(n), sc.rate(m)];
+      if (variant === "startRateK") { t.k = pick(sc.k); t.text = [sc.start(n), sc.rateK(m, t.k)]; }
+      if (variant === "startPoint") { t.x1 = pick(xs); t.text = [sc.start(n), sc.point(t.x1, f(t.x1))]; }
+      if (variant === "pointRate") { t.x1 = pick(xs); t.text = [sc.rate(m), sc.point(t.x1, f(t.x1))]; }
+      if (variant === "twoPoints") {
+        const a = pick(xs); let b; do { b = pick(xs); } while (b === a);
+        t.x1 = Math.min(a, b); t.x2 = Math.max(a, b);
+        t.text = [sc.point(t.x1, f(t.x1)), sc.point(t.x2, f(t.x2))];
+      }
+      return t;
+    }
+    // Ablese-Aufgaben: Punkte auf Rasterlinien suchen
+    const cands = [];
+    for (let x = g.xMinor; x < g.xLineEnd - 1e-9; x = round(x + g.xMinor)) {
+      const y = f(x);
+      if (y <= 0 || y > g.yAxis) continue;
+      if (!isMult(y, g.yMinor)) continue;
+      cands.push({ x, y, xMaj: isMult(x, g.xMajor), yMaj: isMult(y, g.yMajor) });
+    }
+    if (!cands.length) continue;
+    const key = type === "wert" ? ["xMaj", "yMaj"] : ["yMaj", "xMaj"];
+    let pool;
+    if (level === 1) pool = cands.filter(c => c[key[0]] && c[key[1]]);
+    else if (level === 2) pool = cands.filter(c => c[key[0]] && !c[key[1]]);
+    else pool = cands.filter(c => !c[key[0]] || !c[key[1]]);
+    if (!pool.length) { if (tries < 150) continue; pool = cands; }
+    const c = pick(pool);
+    return { type, sc, n, m, g, f, qx: c.x, qy: c.y };
+  }
+  return null;
+}
+
+/* ---------- Zustand & Statistik ---------- */
+const state = { mode: "wert", level: 1, task: null, done: false, counted: false, tipStep: 0, ruler: false };
+let stats = { done: 0, correct: 0, streak: 0, best: 0 };
+try { const s = JSON.parse(localStorage.getItem("linfkt-stats") || "null"); if (s) stats = Object.assign(stats, s); } catch (e) {}
+function saveStats() { try { localStorage.setItem("linfkt-stats", JSON.stringify(stats)); } catch (e) {} renderStats(); }
+function renderStats() {
+  document.getElementById("stCorrect").textContent = stats.correct;
+  document.getElementById("stDone").textContent = stats.done;
+  document.getElementById("stStreak").textContent = stats.streak;
+  document.getElementById("stBest").textContent = stats.best;
+}
+function score(ok) {
+  if (state.counted) return; state.counted = true;
+  stats.done++;
+  if (ok) { stats.correct++; stats.streak++; stats.best = Math.max(stats.best, stats.streak); } else stats.streak = 0;
+  saveStats();
+}
+
+/* ---------- Graph ---------- */
+const W = 640, H = 440, ML = 62, MR = 30, MT = 40, MB = 58;
+function drawGraph(t, opts = {}) {
+  const box = document.getElementById("graphBox");
+  const { sc, g, n, m } = t;
+  const px = x => ML + x / g.xAxis * (W - ML - MR);
+  const py = y => H - MB - y / g.yAxis * (H - MT - MB);
+  const o = [];
+  o.push(`<svg class="graph${state.ruler ? " ruling" : ""}" id="graphSvg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Koordinatensystem: ${esc(sc.caption)}">`);
+  // Raster
+  for (let x = 0; x <= g.xAxis + 1e-9; x = round(x + g.xMinor)) {
+    const maj = isMult(x, g.xMajor);
+    o.push(`<line class="${maj ? "gmajor" : "gminor"}" x1="${px(x)}" y1="${py(0)}" x2="${px(x)}" y2="${py(g.yAxis)}"/>`);
+    if (maj && x > 0) o.push(`<text class="tick" x="${px(x)}" y="${py(0) + 20}" text-anchor="middle">${N(x)}</text>`);
+  }
+  for (let y = 0; y <= g.yAxis + 1e-9; y = round(y + g.yMinor)) {
+    const maj = isMult(y, g.yMajor);
+    o.push(`<line class="${maj ? "gmajor" : "gminor"}" x1="${px(0)}" y1="${py(y)}" x2="${px(g.xAxis)}" y2="${py(y)}"/>`);
+    if (maj && y > 0) o.push(`<text class="tick" x="${px(0) - 8}" y="${py(y) + 4.5}" text-anchor="end">${N(y)}</text>`);
+  }
+  // Achsen
+  o.push(`<path class="axis" d="M${px(0)} ${py(0)} H${px(g.xAxis) + 18} M${px(0)} ${py(0)} V${py(g.yAxis) - 18}"/>`);
+  o.push(`<path class="arrow" d="M${px(g.xAxis) + 24} ${py(0)} l-10 -5 v10z M${px(0)} ${py(g.yAxis) - 24} l-5 10 h10z"/>`);
+  o.push(`<text class="tick" x="${px(0) - 8}" y="${py(0) + 20}" text-anchor="end">0</text>`);
+  o.push(`<text class="axlbl" x="${W - 4}" y="${py(0) + 46}" text-anchor="end">x: ${esc(sc.xName)} in ${esc(sc.xUnit)}</text>`);
+  o.push(`<text class="axlbl" x="${px(0) - 4}" y="${py(g.yAxis) - 28}" text-anchor="start">y: ${esc(sc.yName)} in ${esc(sc.yUnit)}</text>`);
+  // Graph
+  if (opts.line !== false) {
+    const x2 = g.xLineEnd;
+    o.push(`<line class="fline" x1="${px(0)}" y1="${py(n)}" x2="${px(x2)}" y2="${py(n + m * x2)}"/>`);
+  }
+  // gegebene Punkte (Gleichungsaufgaben)
+  (opts.points || []).forEach(p => o.push(`<circle class="gp" cx="${px(p[0])}" cy="${py(p[1])}" r="6"/>`));
+  // Ablese-Hilfslinien
+  if (opts.guide) {
+    const { x, y, kind, partial } = opts.guide;
+    const cls = "guide anim";
+    if (kind === "wert") {
+      o.push(`<path class="${cls}" d="M${px(x)} ${py(0)} V${py(partial ? g.yAxis : y)}${partial ? "" : ` H${px(0)}`}"/>`);
+    } else {
+      o.push(`<path class="${cls}" d="M${px(0)} ${py(y)} H${px(partial ? g.xAxis : x)}${partial ? "" : ` V${py(0)}`}"/>`);
+    }
+    if (!partial) {
+      o.push(`<circle class="guidept" cx="${px(x)}" cy="${py(y)}" r="7"/>`);
+      const lx = kind === "wert" ? px(0) + 8 : px(x) + 8;
+      const ly = kind === "wert" ? py(y) - 10 : py(0) - 10;
+      const label = kind === "wert" ? `y = ${N(y)}` : `x = ${N(x)}`;
+      o.push(`<rect class="glblbg" x="${lx - 4}" y="${ly - 16}" width="${label.length * 8.2 + 8}" height="22" rx="4"/>`);
+      o.push(`<text class="glbl" x="${lx}" y="${ly}">${label}</text>`);
+    } else {
+      const label = kind === "wert" ? `x = ${N(x)}` : `y = ${N(y)}`;
+      const lx = kind === "wert" ? px(x) + 8 : px(0) + 8, ly = kind === "wert" ? py(0) - 10 : py(y) - 10;
+      o.push(`<rect class="glblbg" x="${lx - 4}" y="${ly - 16}" width="${label.length * 8.2 + 8}" height="22" rx="4"/>`);
+      o.push(`<text class="glbl" x="${lx}" y="${ly}">${label}</text>`);
+    }
+  }
+  // Ablesehilfe
+  o.push(`<line class="ruler" id="rulerV" x1="0" y1="${py(0)}" x2="0" y2="${py(g.yAxis)}" visibility="hidden"/>`);
+  o.push(`<line class="ruler" id="rulerH" x1="${px(0)}" y1="0" x2="${px(g.xAxis)}" y2="0" visibility="hidden"/>`);
+  o.push(`<rect class="hit" id="graphHit" x="${px(0)}" y="${py(g.yAxis)}" width="${px(g.xAxis) - px(0)}" height="${py(0) - py(g.yAxis)}"/>`);
+  o.push(`</svg>`);
+  box.innerHTML = o.join("");
+  document.getElementById("graphTitle").textContent = sc.caption;
+  const svg = document.getElementById("graphSvg");
+  const rv = document.getElementById("rulerV"), rh = document.getElementById("rulerH");
+  const move = ev => {
+    if (!state.ruler) return;
+    const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    if (p.x < px(0) || p.x > px(g.xAxis) || p.y < py(g.yAxis) || p.y > py(0)) { rv.setAttribute("visibility", "hidden"); rh.setAttribute("visibility", "hidden"); return; }
+    rv.setAttribute("x1", p.x); rv.setAttribute("x2", p.x); rh.setAttribute("y1", p.y); rh.setAttribute("y2", p.y);
+    rv.setAttribute("visibility", "visible"); rh.setAttribute("visibility", "visible");
+  };
+  svg.addEventListener("pointermove", move);
+  svg.addEventListener("pointerdown", move);
+  svg.addEventListener("pointerleave", () => { rv.setAttribute("visibility", "hidden"); rh.setAttribute("visibility", "hidden"); });
+}
+function graphPlaceholder(text) {
+  document.getElementById("graphBox").innerHTML = `<div class="placeholder">${text}</div>`;
+  document.getElementById("graphTitle").textContent = "Graph";
+}
+
+/* ---------- Darstellung der Aufgabe ---------- */
+const card = document.getElementById("taskCard");
+const TYPE_LABEL = { gleichung: "Funktionsgleichung aufstellen", wert: "Funktionswert ablesen", stelle: "Stelle ablesen" };
+function varsLine(sc) {
+  return `<div class="vars"><span><b>x</b>: ${esc(sc.xName)} in ${esc(sc.xUnit)}</span><span><b>y</b>: ${esc(sc.yName)} in ${esc(sc.yUnit)}</span></div>`;
+}
+function newTask() {
+  const t = genTask(state.mode, state.level);
+  state.task = t; state.done = false; state.counted = false; state.tipStep = 0;
+  document.getElementById("graphNote").textContent = "";
+  const { sc } = t;
+  let h = `<span class="tag">${TYPE_LABEL[t.type]} · ${esc(sc.title)}</span>`;
+  if (t.type === "gleichung") {
+    h += `<h2>${esc(sc.title)}</h2>
+      <p class="situation">${esc(sc.intro)} ${t.text.map(esc).join(" ")}</p>
+      ${varsLine(sc)}
+      <p class="task">Stelle die Funktionsgleichung auf, die diese Situation beschreibt.</p>
+      <div class="eq">
+        <span class="lbl">f(x) =</span>
+        <button class="pm" type="button" id="pmBtn" title="Vorzeichen von m wechseln" aria-label="Vorzeichen von m wechseln">±</button>
+        <input type="text" id="inM" inputmode="decimal" autocomplete="off" aria-label="Steigung m" placeholder="m">
+        <span>· x +</span>
+        <input type="text" id="inN" inputmode="decimal" autocomplete="off" aria-label="y-Achsenabschnitt n" placeholder="n">
+      </div>`;
+    graphPlaceholder("Der Graph erscheint, sobald du die Gleichung richtig aufgestellt oder die Lösung angesehen hast.");
+  } else {
+    const isWert = t.type === "wert";
+    const q = isWert ? sc.askY(t.qx) : sc.askX(t.qy);
+    h += `<h2>${esc(sc.title)}</h2>
+      <p class="situation">${esc(sc.intro)} Der Graph rechts zeigt die Situation.</p>
+      ${varsLine(sc)}
+      <p class="task">${esc(q)} Lies am Graphen ab.</p>
+      <div class="answer">
+        <label for="inA">${isWert ? "y" : "x"} ≈</label>
+        <input type="text" id="inA" inputmode="decimal" autocomplete="off">
+        <span class="unit">${esc(isWert ? sc.yUnit : sc.xUnit)}</span>
+      </div>`;
+    drawGraph(t);
+  }
+  h += `<div class="btns">
+      <button class="btn primary" type="button" id="checkBtn">Prüfen</button>
+      <button class="btn" type="button" id="tipBtn">Tipp</button>
+      <button class="btn" type="button" id="solBtn">Lösung zeigen</button>
+      <button class="btn" type="button" id="nextBtn">Neue Aufgabe</button>
+    </div>
+    <div class="fb" id="fb"></div>`;
+  card.innerHTML = h;
+  document.getElementById("checkBtn").onclick = check;
+  document.getElementById("tipBtn").onclick = tip;
+  document.getElementById("solBtn").onclick = showSolution;
+  document.getElementById("nextBtn").onclick = newTask;
+  card.querySelectorAll("input").forEach(i => i.addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); state.done ? newTask() : check(); }
+  }));
+  const pm = document.getElementById("pmBtn");
+  if (pm) pm.onclick = () => {
+    const i = document.getElementById("inM"); let v = i.value.trim();
+    i.value = v.startsWith("-") || v.startsWith(MINUS) ? v.slice(1) : "-" + v; i.focus();
+  };
+  const first = card.querySelector("input"); if (first) first.focus({ preventScroll: true });
+}
+function fb(html, cls, replace = true) {
+  const box = document.getElementById("fb");
+  const d = document.createElement("div"); d.className = "msg " + cls; d.innerHTML = html;
+  if (replace) box.innerHTML = "";
+  box.appendChild(d);
+}
+
+/* ---------- Lösungswege ---------- */
+function unitPer(sc) { return `${sc.yUnit} pro ${sc.xUnit === "Wochen" ? "Woche" : sc.xUnit}`; }
+function eqSteps(t) {
+  const { sc, n, m, f } = t; const s = [];
+  const dir = m < 0 ? " Die Größe nimmt ab, deshalb ist m negativ." : "";
+  if (t.variant === "direct") {
+    s.push(`Startwert bei x = 0: <span class="m">n = ${N(n)}</span>`);
+    s.push(`Änderung pro ${esc(sc.xUnit === "Wochen" ? "Woche" : sc.xUnit)}: <span class="m">m = ${N(m)}</span>.${dir}`);
+  } else if (t.variant === "startRateK") {
+    s.push(`Startwert bei x = 0: <span class="m">n = ${N(n)}</span>`);
+    s.push(`Die Änderung ist für ${t.k} ${esc(sc.xUnit)} angegeben. Pro 1 ${esc(sc.xUnit === "Wochen" ? "Woche" : sc.xUnit)}: <span class="m">m = ${N(m * t.k)} : ${t.k} = ${N(m)}</span>.${dir}`);
+  } else if (t.variant === "startPoint") {
+    s.push(`Startwert bei x = 0: <span class="m">n = ${N(n)}</span>`);
+    s.push(`Wertepaar (${N(t.x1)} | ${N(f(t.x1))}). Änderung insgesamt: <span class="m">${N(f(t.x1))} ${MINUS} ${N(n)} = ${N(f(t.x1) - n)}</span>`);
+    s.push(`Änderung pro Einheit: <span class="m">m = ${N(f(t.x1) - n)} : ${N(t.x1)} = ${N(m)}</span>`);
+  } else if (t.variant === "pointRate") {
+    s.push(`Änderung pro Einheit: <span class="m">m = ${N(m)}</span>.${dir}`);
+    s.push(`Wertepaar (${N(t.x1)} | ${N(f(t.x1))}) einsetzen: <span class="m">${N(f(t.x1))} = ${N(m)} · ${N(t.x1)} + n</span>`);
+    s.push(`<span class="m">n = ${N(f(t.x1))} ${MINUS} (${N(m * t.x1)}) = ${N(n)}</span> (Startwert bei x = 0)`);
+  } else {
+    const y1 = f(t.x1), y2 = f(t.x2);
+    s.push(`Wertepaare: (${N(t.x1)} | ${N(y1)}) und (${N(t.x2)} | ${N(y2)})`);
+    s.push(`Steigung: <span class="m">m = (${N(y2)} ${MINUS} ${N(y1)}) : (${N(t.x2)} ${MINUS} ${N(t.x1)}) = ${N(y2 - y1)} : ${N(t.x2 - t.x1)} = ${N(m)}</span>`);
+    s.push(`Einsetzen: <span class="m">${N(y1)} = ${N(m)} · ${N(t.x1)} + n</span> ⇒ <span class="m">n = ${N(y1)} ${MINUS} (${N(m * t.x1)}) = ${N(n)}</span>`);
+  }
+  s.push(`Funktionsgleichung: <b class="m">${eqStr(m, n)}</b>`);
+  return s;
+}
+function readSteps(t) {
+  const { sc, n, m, qx, qy } = t;
+  if (t.type === "wert") return [
+    `Gehe auf der x-Achse zur Stelle <span class="m">x = ${N(qx)}</span> (${esc(sc.xUnit)}).`,
+    `Gehe senkrecht nach ${m * qx + n >= 0 ? "oben" : "unten"} bis zum Graphen.`,
+    `Gehe waagerecht zur y-Achse und lies ab: <b class="m">y = ${N(qy)}</b> (${esc(sc.yUnit)}).`,
+    `Kontrolle mit der Gleichung <span class="m">${eqStr(m, n)}</span>: <span class="m">f(${N(qx)}) = ${N(m)} · ${N(qx)} + ${N(n)} = ${N(qy)}</span>`
+  ];
+  return [
+    `Gehe auf der y-Achse zum Wert <span class="m">y = ${N(qy)}</span> (${esc(sc.yUnit)}).`,
+    `Gehe waagerecht bis zum Graphen.`,
+    `Gehe senkrecht zur x-Achse und lies ab: <b class="m">x = ${N(qx)}</b> (${esc(sc.xUnit)}).`,
+    `Kontrolle mit der Gleichung <span class="m">${eqStr(m, n)}</span>: <span class="m">${N(m)} · ${N(qx)} + ${N(n)} = ${N(qy)}</span>`
+  ];
+}
+function answerSentence(t) {
+  if (t.type === "wert") return t.sc.ansY(t.qx, t.qy);
+  if (t.type === "stelle") return t.sc.ansX(t.qx, t.qy);
+  return "";
+}
+function revealGraphEq(t) {
+  const pts = [];
+  if (t.x1 != null) pts.push([t.x1, t.f(t.x1)]);
+  if (t.x2 != null) pts.push([t.x2, t.f(t.x2)]);
+  pts.unshift([0, t.n]);
+  drawGraph(t, { points: pts });
+  document.getElementById("graphNote").textContent = eqStr(t.m, t.n);
+}
+
+/* ---------- Prüfen, Tipp, Lösung ---------- */
+function check() {
+  const t = state.task; if (!t) return;
+  if (t.type === "gleichung") {
+    const iM = document.getElementById("inM"), iN = document.getElementById("inN");
+    const mi = parseNum(iM.value), ni = parseNum(iN.value);
+    if (isNaN(mi) || isNaN(ni)) { fb("Trage für <i>m</i> und <i>n</i> jeweils eine Zahl ein, zum Beispiel 2,5 oder −3.", "hint"); return; }
+    const mOk = eq(mi, t.m), nOk = eq(ni, t.n);
+    iM.className = mOk ? "ok" : "bad"; iN.className = nOk ? "ok" : "bad";
+    if (mOk && nOk) {
+      score(true); state.done = true;
+      fb(`<strong>Richtig!</strong><p class="m">${eqStr(t.m, t.n)}</p><p>n = ${N(t.n)} ist der Startwert (bei x = 0), m = ${N(t.m)} ist die Änderung pro ${esc(t.sc.xUnit === "Wochen" ? "Woche" : t.sc.xUnit)}. Rechts siehst du den Graphen dazu.</p>`, "ok");
+      revealGraphEq(t);
+      return;
+    }
+    score(false);
+    const msgs = [];
+    if (eq(mi, t.n) && eq(ni, t.m)) msgs.push("Du hast <i>m</i> und <i>n</i> vertauscht. <i>n</i> ist der Startwert, <i>m</i> die Änderung pro Einheit.");
+    else {
+      if (!mOk) {
+        if (eq(mi, -t.m)) msgs.push(t.m < 0 ? "Prüfe das Vorzeichen von <i>m</i>: Die Größe nimmt ab, also muss <i>m</i> negativ sein." : "Prüfe das Vorzeichen von <i>m</i>: Die Größe nimmt zu, also ist <i>m</i> positiv.");
+        else if (t.sc.cents && eq(mi, t.m * 100)) msgs.push("Achte auf die Einheit: y wird in Euro gemessen, nicht in Cent. Rechne den Minutenpreis in Euro um.");
+        else if (t.variant === "startRateK" && eq(A(mi), A(t.m * t.k))) msgs.push(`Das ist die Änderung für ${t.k} Einheiten. <i>m</i> ist die Änderung für <b>eine</b> Einheit.`);
+        else if ((t.variant === "startPoint" || t.variant === "twoPoints" || t.variant === "pointRate") && t.x1 != null && eq(mi, t.f(t.x1) / t.x1)) msgs.push("Du hast y durch x geteilt. Der Startwert gehört aber nicht zur Änderung. Ziehe ihn zuerst ab bzw. nutze die Differenz zweier y-Werte.");
+        else msgs.push("<i>m</i> stimmt noch nicht. <i>m</i> gibt an, um wie viel sich y ändert, wenn x um 1 größer wird.");
+      }
+      if (!nOk) {
+        if (t.x1 != null && eq(ni, t.f(t.x1))) msgs.push("Für <i>n</i> hast du einen Wert eingesetzt, der nicht zu x = 0 gehört. <i>n</i> ist der Wert zu Beginn (x = 0).");
+        else msgs.push("<i>n</i> stimmt noch nicht. <i>n</i> ist der Wert von y, wenn x = 0 ist (der Startwert).");
+      }
+    }
+    fb(`<strong>Noch nicht ganz.</strong>${msgs.map(m => `<p>${m}</p>`).join("")}<p>Korrigiere deine Eingabe und prüfe noch einmal.</p>`, "bad");
+    return;
+  }
+  // Ablesen
+  const iA = document.getElementById("inA"); const v = parseNum(iA.value);
+  if (isNaN(v)) { fb("Trage eine Zahl ein, zum Beispiel 12 oder 7,5.", "hint"); return; }
+  const isWert = t.type === "wert";
+  const target = isWert ? t.qy : t.qx, tol = (isWert ? t.g.yMinor : t.g.xMinor) / 2 - 1e-9;
+  const ok = Math.abs(v - target) <= tol;
+  iA.className = ok ? "ok" : "bad";
+  if (ok) {
+    score(true); state.done = true;
+    const exact = eq(v, target) ? "" : `<p>Genau abgelesen wäre es ${N(target)}.</p>`;
+    fb(`<strong>Richtig!</strong>${exact}<p><b>Antwort:</b> ${esc(answerSentence(t))}</p>`, "ok");
+    drawGraph(t, { guide: { x: t.qx, y: t.qy, kind: t.type } });
+    return;
+  }
+  score(false);
+  let extra = "";
+  if (isWert && Math.abs(v - t.qx) < 1e-6) extra = "<p>Du hast den x-Wert eingegeben. Gesucht ist der zugehörige y-Wert.</p>";
+  else if (!isWert && Math.abs(v - t.qy) < 1e-6) extra = "<p>Du hast den y-Wert eingegeben. Gesucht ist die zugehörige Stelle x.</p>";
+  else {
+    const step = isWert ? t.g.yMinor : t.g.xMinor;
+    extra = `<p>Achte auf die Einteilung: Ein kleines Kästchen entspricht ${N(step)} ${esc(isWert ? t.sc.yUnit : t.sc.xUnit)}.</p>`;
+  }
+  fb(`<strong>Noch nicht ganz.</strong>${extra}<p>Lies noch einmal genau ab. Ein Tipp zeigt dir den Startpunkt.</p>`, "bad");
+}
+
+function tip() {
+  const t = state.task; if (!t) return;
+  let msg;
+  if (t.type === "gleichung") {
+    const tips = [];
+    tips.push("Die Gleichung hat die Form <span class=\"m\">f(x) = m·x + n</span>. <i>n</i> ist der Startwert (y bei x = 0), <i>m</i> ist die Änderung von y, wenn x um 1 größer wird.");
+    if (t.variant === "direct") tips.push(t.m < 0 ? "Suche im Text, womit die Situation beginnt, und um wie viel der Wert pro Einheit <b>abnimmt</b>. Abnahme bedeutet: m ist negativ." : "Suche im Text, womit die Situation beginnt (das ist n) und was pro Einheit hinzukommt (das ist m).");
+    if (t.variant === "startRateK") tips.push(`Die Änderung ist für ${t.k} Einheiten angegeben. Teile sie durch ${t.k}, um <i>m</i> zu erhalten.` + (t.m < 0 ? " Denke an das Minuszeichen." : ""));
+    if (t.variant === "startPoint") tips.push("Ziehe vom gegebenen y-Wert den Startwert ab. So erhältst du die Änderung insgesamt. Teile sie dann durch x.");
+    if (t.variant === "pointRate") tips.push("<i>m</i> steht im Text. Setze das Wertepaar und <i>m</i> in <span class=\"m\">y = m·x + n</span> ein und löse nach <i>n</i> auf.");
+    if (t.variant === "twoPoints") tips.push("Berechne zuerst die Steigung mit <span class=\"m\">m = (y₂ − y₁) : (x₂ − x₁)</span>. Setze danach ein Wertepaar ein und bestimme <i>n</i>.");
+    msg = tips[Math.min(state.tipStep, tips.length - 1)];
+  } else {
+    const isWert = t.type === "wert";
+    msg = isWert
+      ? `Suche die Stelle <span class="m">x = ${N(t.qx)}</span> auf der x-Achse. Gehe von dort senkrecht nach oben, bis du den Graphen triffst, und dann waagerecht nach links zur y-Achse.`
+      : `Suche den Wert <span class="m">y = ${N(t.qy)}</span> auf der y-Achse. Gehe von dort waagerecht nach rechts, bis du den Graphen triffst, und dann senkrecht nach unten zur x-Achse.`;
+    if (!state.done) drawGraph(t, { guide: { x: t.qx, y: t.qy, kind: t.type, partial: true } });
+  }
+  state.tipStep++;
+  fb(`<strong>Tipp</strong><p>${msg}</p>`, "hint");
+}
+
+function showSolution() {
+  const t = state.task; if (!t) return;
+  if (!state.done) score(false);
+  state.done = true;
+  if (t.type === "gleichung") {
+    document.getElementById("inM").value = N(t.m); document.getElementById("inN").value = N(t.n);
+    fb(`<strong>Lösungsweg</strong><ol class="steps">${eqSteps(t).map(s => `<li>${s}</li>`).join("")}</ol>`, "sol");
+    revealGraphEq(t);
+  } else {
+    document.getElementById("inA").value = N(t.type === "wert" ? t.qy : t.qx);
+    fb(`<strong>Lösungsweg</strong><ol class="steps">${readSteps(t).map(s => `<li>${s}</li>`).join("")}</ol><p><b>Antwort:</b> ${esc(answerSentence(t))}</p>`, "sol");
+    drawGraph(t, { guide: { x: t.qx, y: t.qy, kind: t.type } });
+  }
+}
+
+/* ---------- Steuerung ---------- */
+function setPressed(segId, attr, val) {
+  document.querySelectorAll(`#${segId} button`).forEach(b => b.setAttribute("aria-pressed", String(b.dataset[attr] === String(val))));
+}
+document.getElementById("modeSeg").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  state.mode = b.dataset.mode; setPressed("modeSeg", "mode", state.mode);
+  try { localStorage.setItem("linfkt-mode", state.mode); } catch (er) {}
+  document.getElementById("graphNote").textContent = "";
+  newTask();
+});
+document.getElementById("levelSeg").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  state.level = +b.dataset.level; setPressed("levelSeg", "level", state.level);
+  try { localStorage.setItem("linfkt-level", state.level); } catch (er) {}
+  document.getElementById("graphNote").textContent = "";
+  newTask();
+});
+document.getElementById("rulerToggle").addEventListener("change", e => {
+  state.ruler = e.target.checked;
+  const svg = document.getElementById("graphSvg"); if (svg) svg.classList.toggle("ruling", state.ruler);
+});
+try {
+  const md = localStorage.getItem("linfkt-mode"); if (md && ["gleichung", "wert", "stelle", "mix"].includes(md)) state.mode = md;
+  const lv = +localStorage.getItem("linfkt-level"); if ([1, 2, 3].includes(lv)) state.level = lv;
+} catch (e) {}
+setPressed("modeSeg", "mode", state.mode); setPressed("levelSeg", "level", state.level);
+renderStats();
+newTask();
+</script>
+</html>
